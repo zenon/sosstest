@@ -12,7 +12,7 @@ begin
 	using Pkg
 	Pkg.activate("c:\\projects\\plutoJL\\soss")
 	using Random, Distributions, Soss
-	Random.seed!(3)
+	#Random.seed!(3)
 	using Plots, StatsPlots
 end
 
@@ -34,9 +34,9 @@ With this formula, $a$ is the average growth rate for our oaks. As we don't know
 # ╔═╡ 3c9a90f0-dfc7-11ea-1ac1-83faa6c03e65
 m1 = @model age begin
 	a = 7.0 # ~ Uniform(0.1, 2.0)
-    size ~ For(eachrow(age)) do x
-		# eachrow gives an array type, so we take the value out of it with x[1]
-        Normal(a * x[1], 1.0)
+	# eachrow gives an array type, so we take the value out of it with x[1]
+    size ~ For(eachindex(age)) do x
+        Normal(a * x, 1.0)
     end
 end
 
@@ -59,7 +59,10 @@ priorSimulation = rand(m1Forward)
 pairs(priorSimulation)
 
 # ╔═╡ 4b9afe40-dfcd-11ea-1564-9f00dcdfdd0a
+plot(ages, priorSimulation.size .- ages .* priorSimulation.a ./ 2, seriestype = :scatter)
 
+# ╔═╡ cfae3bd0-e071-11ea-139f-1bc8b8559e9f
+plot(ages, priorSimulation.size .- ages, seriestype = :scatter)
 
 # ╔═╡ Cell order:
 # ╠═b086ae50-de5e-11ea-032c-477b0fc4e04a
@@ -72,3 +75,4 @@ pairs(priorSimulation)
 # ╠═dac44da0-dfc9-11ea-3f34-2d28d5a8b19e
 # ╠═459083d0-dfcd-11ea-1b77-19c166be3a11
 # ╠═4b9afe40-dfcd-11ea-1564-9f00dcdfdd0a
+# ╠═cfae3bd0-e071-11ea-139f-1bc8b8559e9f
